@@ -8,5 +8,9 @@ class Model private constructor() {
         val shared = Model()
     }
 
+    fun deleteStudent(id: String) {
+        students.removeIf { it.id == id }
+    }
+
 
 }
