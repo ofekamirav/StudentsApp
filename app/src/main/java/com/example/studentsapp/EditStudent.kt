@@ -1,6 +1,7 @@
 package com.example.studentsapp
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
@@ -14,34 +15,41 @@ import com.google.android.material.textfield.TextInputEditText
 class EditStudent: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        var nameEditText: TextInputEditText?= null
+        var idEditText: TextInputEditText?= null
+        var phoneEditText: TextInputEditText?= null
+        var addressEditText: TextInputEditText?= null
+        var checkBox: MaterialCheckBox?= null
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.edit_student)
 
         //get the data from the intent
-        val studentId = intent.getStringExtra("student_id")
-        val studentName = intent.getStringExtra("student_name")
-        val studentPhone = intent.getStringExtra("student_phone")
-        val studentAddress = intent.getStringExtra("student_address")
+        val studentId = intent.getStringExtra("student_id") ?: ""
+        val studentName = intent.getStringExtra("student_name") ?: ""
+        val studentPhone = intent.getStringExtra("student_phone") ?: ""
+        val studentAddress = intent.getStringExtra("student_address") ?: ""
         val studentIsChecked = intent.getBooleanExtra("student_isChecked", false)
 
         //get the fields from the layout
-        var nameEditText: TextInputEditText= findViewById(R.id.NameEditText)
-        var idEditText: TextInputEditText= findViewById(R.id.IDEditText)
-        var phoneEditText: TextInputEditText= findViewById(R.id.PhoneEditText)
-        var addressEditText: TextInputEditText= findViewById(R.id.AddressEditText)
-        var checkBox: MaterialCheckBox= findViewById(R.id.checkBox)
+        nameEditText = findViewById(R.id.NameEditText)
+        idEditText = findViewById(R.id.IDEditText)
+        phoneEditText = findViewById(R.id.PhoneEditText)
+        addressEditText = findViewById(R.id.AddressEditText)
+        checkBox = findViewById(R.id.checkBox)
 
         //get the buttons from the layout
         var saveButton: Button= findViewById(R.id.UpdateStudentBTN)
         var cancelButton: Button = findViewById(R.id.CancelBTN)
 
         //set the data to the fields
-        nameEditText.setText(studentName)
-        idEditText.setText(studentId)
-        phoneEditText.setText(studentPhone)
-        addressEditText.setText(studentAddress)
-        checkBox.isChecked = studentIsChecked
+        nameEditText?.setText(studentName)
+        idEditText?.setText(studentId)
+        phoneEditText?.setText(studentPhone)
+        addressEditText?.setText(studentAddress)
+        checkBox?.isChecked = studentIsChecked
 
 
 
@@ -57,6 +65,15 @@ class EditStudent: AppCompatActivity() {
             if (index != -1) {
                 Model.shared.students[index]=Student(UpdateName, UpdateId, UpdatePhone, UpdateAddress, UpdateIsChecked)
         }
+            // send Updated data to the StudentDetails Activity
+            val resultIntent = Intent()
+            resultIntent.putExtra("student_name", UpdateName)
+            resultIntent.putExtra("student_id", UpdateId)
+            resultIntent.putExtra("student_phone", UpdatePhone)
+            resultIntent.putExtra("student_address", UpdateAddress)
+            resultIntent.putExtra("student_isChecked", UpdateIsChecked)
+            setResult(RESULT_OK, resultIntent)
+
             finish()
         }
 

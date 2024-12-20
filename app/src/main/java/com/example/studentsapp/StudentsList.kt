@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
+import com.google.android.material.checkbox.MaterialCheckBox
 
 
 class StudentsList : AppCompatActivity() {
@@ -71,8 +72,7 @@ class StudentsList : AppCompatActivity() {
         var studentPic: ImageView? = itemView.findViewById(R.id.StudentPic)
         var studentName: TextView? = itemView.findViewById(R.id.NameTextView)
         var studentID: TextView? = itemView.findViewById(R.id.IDTextView)
-        var studentChecked: TextView? = itemView.findViewById(R.id.checkBox)
-
+        var studentChecked: MaterialCheckBox = itemView.findViewById(R.id.checkBox)
         init {
             studentPic?.setImageResource(R.drawable.student_icon)
             studentName= itemView.findViewById(R.id.NameTextView)
@@ -105,7 +105,23 @@ class StudentsList : AppCompatActivity() {
             holder.studentPic?.setImageResource(R.drawable.student_icon)
             holder.studentName?.text = student.name
             holder.studentID?.text = student.id
-            //checkbox is false by default
+
+            holder.studentChecked.setOnCheckedChangeListener(null)
+            holder.studentChecked.isChecked = student.isChecked
+            holder.studentChecked.setOnCheckedChangeListener { _, isChecked ->
+                student.isChecked = isChecked
+            }
+
+
+            //holder.studentChecked.tag = position
+
+            //holder.studentChecked.setOnClickListener { view ->
+              //  (view.tag as? Int)?.let { tag ->
+                //    var student = students[tag]
+                  //  student.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
+              //  }
+            //}
+
 
             //pass the data for StudentDetails Activity
             holder.itemView.setOnClickListener {
