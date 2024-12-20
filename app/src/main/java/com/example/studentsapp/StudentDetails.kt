@@ -12,6 +12,12 @@ import com.google.android.material.checkbox.MaterialCheckBox
 
 class StudentDetails : AppCompatActivity() {
 
+    var nameValue: TextView?= null
+    var IdValue: TextView?= null
+    var phoneValue: TextView?= null
+    var addressValue: TextView?= null
+    var checkedBox: MaterialCheckBox?= null
+
 
    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,19 +31,20 @@ class StudentDetails : AppCompatActivity() {
        val address = intent.getStringExtra("address")
        val isChecked = intent.getBooleanExtra("isChecked", false)
 
+
        //get the fields from the layout
-       var nameValue: TextView = findViewById(R.id.nameValue)
-       var IdValue: TextView = findViewById(R.id.IdValue)
-       var phoneValue: TextView = findViewById(R.id.phoneValue)
-       var addressValue: TextView = findViewById(R.id.addressValue)
-       var checkedBox: MaterialCheckBox = findViewById(R.id.checkedBox)
+       nameValue = findViewById(R.id.nameValue)
+       IdValue = findViewById(R.id.IdValue)
+       phoneValue = findViewById(R.id.phoneValue)
+       addressValue = findViewById(R.id.addressValue)
+       checkedBox = findViewById(R.id.checkedBox)
 
        //set the data to the fields
-       nameValue.text = name
-       IdValue.text = id
-       phoneValue.text = phone
-       addressValue.text = address
-       checkedBox.isChecked = isChecked
+       nameValue?.text = name
+       IdValue?.text = id
+       phoneValue?.text = phone
+       addressValue?.text = address
+       checkedBox?.isChecked = isChecked
 
        //get the buttons from the layout
        var backButton: Button = findViewById(R.id.backButton)
@@ -66,10 +73,28 @@ class StudentDetails : AppCompatActivity() {
            intent.putExtra("address", address)
            intent.putExtra("isChecked", isChecked)
 
-           startActivity(intent)
-
+           startActivityForResult(intent, 100)
        }
 
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            //get the update data after edit student
+            val updatedName = data?.getStringExtra("student_name")
+            val updatedPhone = data?.getStringExtra("student_phone")
+            val updatedAddress = data?.getStringExtra("student_address")
+            val updatedIsChecked = data?.getBooleanExtra("student_isChecked", false)
+
+            //update the fields with the new data
+            nameValue?.text = updatedName
+            phoneValue?.text = updatedPhone
+            addressValue?.text = updatedAddress
+            checkedBox?.isChecked = updatedIsChecked ?: false
+        }
+    }
+
 
 }
