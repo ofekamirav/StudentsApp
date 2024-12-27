@@ -3,6 +3,8 @@ package com.example.studentsapp
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -22,6 +24,11 @@ class NewStudentFragment : Fragment() {
     var addStudentButton: Button ?= null
     var cancelButton: Button ?= null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)//to not showing the add button in menu
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +44,12 @@ class NewStudentFragment : Fragment() {
         cancelButton?.setOnClickListener(::onCancelClicked)
 
         return view
+    }
+
+    //erase the add button from the menu
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     private fun setUp(view: View?){

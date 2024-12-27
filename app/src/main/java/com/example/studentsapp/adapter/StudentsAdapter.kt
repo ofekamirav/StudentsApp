@@ -4,62 +4,35 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.R
-import com.example.studentsapp.StudentDetails
 import com.example.studentsapp.model.Student
 
-class StudentsAdapter(private val students: MutableList<Student>) :  RecyclerView.Adapter<StudentsViewHolder>(){
 
+class StudentsAdapter(
+    private val students: MutableList<Student>,
+    var listener: OnStudentClickListener? = null
+) :  RecyclerView.Adapter<StudentViewHolder>(){
 
-        //אתחול של שורה ברשימה שלנו
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentsViewHolder {
-            val view: View = LayoutInflater.from(parent.context).inflate(
+    //אתחול של שורה ברשימה שלנו
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
+        val inflation = LayoutInflater.from(parent.context)
+        val view: View = inflation.inflate(
                 R.layout.student_list_row,
                 parent,
                 false
             )
-            return StudentsViewHolder(view)
+         return StudentViewHolder(view, listener)
         }
         //כמה פריטים יופיעו ברשימה
         override fun getItemCount(): Int {
             return students.size
         }
         //הזרקת המידע הרלוונטי לאותה שורה שיצרנו
-        override fun onBindViewHolder(holder: StudentsViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
             val student = students[position]
-            holder.studentPic?.setImageResource(R.drawable.student_icon)
-            holder.studentName?.text = student.name
-            holder.studentID?.text = student.id
-
-            holder.studentChecked.setOnCheckedChangeListener(null)
-            holder.studentChecked.isChecked = student.isChecked
-            holder.studentChecked.setOnCheckedChangeListener { _, isChecked ->
-                student.isChecked = isChecked
-            }
-
-
-            //holder.studentChecked.tag = position
-
-            //holder.studentChecked.setOnClickListener { view ->
-              //  (view.tag as? Int)?.let { tag ->
-                //    var student = students[tag]
-                  //  student.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
-              //  }
-            //}
-
-
-            //pass the data for StudentDetails Activity
-            holder.itemView.setOnClickListener {
-                val intent = Intent(holder.itemView.context, StudentDetails::class.java)
-                intent.putExtra("name", student.name)
-                intent.putExtra("id", student.id)
-                intent.putExtra("phone", student.phone)
-                intent.putExtra("address", student.address)
-                intent.putExtra("isChecked", student.isChecked)
-                holder.itemView.context.startActivity(intent)
-            }
-
+           holder.bind(student, position)
 
         }
 

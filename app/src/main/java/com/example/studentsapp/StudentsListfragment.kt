@@ -1,18 +1,22 @@
 package com.example.studentsapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.studentsapp.adapter.OnStudentClickListener
 import com.example.studentsapp.adapter.StudentsAdapter
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 
 
-class StudentsListfragment : Fragment() {
+class StudentsListfragment : Fragment()  {
 
     var students: MutableList<Student> = ArrayList()
     private lateinit var adapter: StudentsAdapter
@@ -23,7 +27,7 @@ class StudentsListfragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.students_list_recycler_view, container, false)
+        val view = inflater.inflate(R.layout.fragment_student_list, container, false)
 
         students= Model.shared.students
 
@@ -35,6 +39,29 @@ class StudentsListfragment : Fragment() {
 
         adapter = StudentsAdapter(students)
 
+        adapter.listener= object : OnStudentClickListener {
+            override fun onStudentClick(position: Int) {
+                Log.d("TAG", "Student clicked at position: $position")
+
+            }
+
+            override fun onStudentClick(student: Student?) {
+                Log.d("TAG", "Student clicked name: ${student?.name}")
+
+                student?.let {
+                    val action = StudentsListfragmentDirections
+                        .actionStudentsListfragmentToStudentDetailsFragment(
+                            it.name,
+                            it.id,
+                            it.phone,
+                            it.address,
+                            it.isChecked
+                        )
+                    Navigation.findNavController(requireView()).navigate(action)
+                }
+
+            }
+        }
         recyclerView.adapter = adapter
 
         return view
