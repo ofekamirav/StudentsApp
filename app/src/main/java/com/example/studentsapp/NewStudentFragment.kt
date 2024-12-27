@@ -14,6 +14,14 @@ import com.google.android.material.textfield.TextInputEditText
 
 class NewStudentFragment : Fragment() {
 
+    var nameEditText: TextInputEditText?=null
+    var idEditText: TextInputEditText?=null
+    var phoneEditText: TextInputEditText?=null
+    var addressEditText: TextInputEditText?=null
+    var checkBox: MaterialCheckBox?=null
+    var addStudentButton: Button ?= null
+    var cancelButton: Button ?= null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,43 +29,49 @@ class NewStudentFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.new_student, container, false)
 
-
-        val nameEditText: TextInputEditText = view.findViewById(R.id.NameEditText)
-        val idEditText: TextInputEditText = view.findViewById(R.id.IDEditText)
-        val phoneEditText: TextInputEditText = view.findViewById(R.id.PhoneEditText)
-        val addressEditText: TextInputEditText = view.findViewById(R.id.AddressEditText)
-        val checkBox: MaterialCheckBox = view.findViewById(R.id.checkBox)
+        setUp(view)
 
 
-        val addStudentButton: Button = view.findViewById(R.id.AddStudentButton)
-        val cancelButton: Button = view.findViewById(R.id.CancelButton)
+        addStudentButton?.setOnClickListener(::onAddStudentClicked)
 
-
-        addStudentButton.setOnClickListener {
-            val student = Student(
-                nameEditText.text.toString(),
-                idEditText.text.toString(),
-                phoneEditText.text.toString(),
-                addressEditText.text.toString(),
-                checkBox.isChecked
-            )
-
-            Model.shared.students.add(student)
-            Log.d("NewStudentFragment", "Student added: $student")
-            Log.d("NewStudentFragment", "Students in Model: ${Model.shared.students}")
-
-            closeFragment()
-        }
-
-        cancelButton.setOnClickListener {
-
-            closeFragment()
-        }
+        cancelButton?.setOnClickListener(::onCancelClicked)
 
         return view
+    }
+
+    private fun setUp(view: View?){
+        nameEditText= view?.findViewById(R.id.NameEditText)
+        idEditText = view?.findViewById(R.id.IDEditText)
+        phoneEditText = view?.findViewById(R.id.PhoneEditText)
+        addressEditText = view?.findViewById(R.id.AddressEditText)
+        checkBox = view?.findViewById(R.id.checkBox)
+        addStudentButton = view?.findViewById(R.id.AddStudentButton)
+        cancelButton = view?.findViewById(R.id.CancelBTN)
+
     }
 
     private fun closeFragment() {
         parentFragmentManager.popBackStack()
     }
+
+    private fun onCancelClicked(view: View?){
+        closeFragment()
+    }
+    private fun onAddStudentClicked(view: View?){
+        val student = Student(
+            nameEditText?.text.toString(),
+            idEditText?.text.toString(),
+            phoneEditText?.text.toString(),
+            addressEditText?.text.toString(),
+            checkBox?.isChecked?:false
+        )
+
+        Model.shared.students.add(student)
+        Log.d("NewStudentFragment", "Student added: $student")
+        Log.d("NewStudentFragment", "Students in Model: ${Model.shared.students}")
+
+        closeFragment()
+
+    }
+
 }
