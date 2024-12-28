@@ -40,10 +40,6 @@ class StudentsListfragment : Fragment()  {
         adapter = StudentsAdapter(students)
 
         adapter.listener= object : OnStudentClickListener {
-            override fun onStudentClick(position: Int) {
-                Log.d("TAG", "Student clicked at position: $position")
-
-            }
 
             override fun onStudentClick(student: Student?) {
                 Log.d("TAG", "Student clicked name: ${student?.name}")
@@ -57,7 +53,7 @@ class StudentsListfragment : Fragment()  {
                             it.address,
                             it.isChecked
                         )
-                    Navigation.findNavController(requireView()).navigate(action)
+                    Navigation.findNavController(view).navigate(action)
                 }
 
             }
@@ -73,8 +69,7 @@ class StudentsListfragment : Fragment()  {
     }
 
     private fun updateUI() {
-        val adapter = StudentsAdapter(Model.shared.students)
-        recyclerView.adapter = adapter
+        adapter.notifyDataSetChanged()
     }
 
 
