@@ -12,5 +12,11 @@ class Model private constructor() {
         students.removeIf { it.id == id }
     }
 
+    init{
+        for (i in 1..10) {
+            students.add(Student("Student $i", "ID$i", "Phone$i", "Address$i"))
+        }
+    }
+
 
 }
