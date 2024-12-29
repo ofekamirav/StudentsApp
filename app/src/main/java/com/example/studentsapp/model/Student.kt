@@ -6,7 +6,8 @@ data class Student(
     val id: String = "",
     val phone: String = "",
     val address: String = "",
-    var isChecked: Boolean = false
-
+    var isChecked: Boolean = false,
+    val BirthDate: String = "",
+    val BirthTime: String = ""
 
 )

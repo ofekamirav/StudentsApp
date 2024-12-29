@@ -108,6 +108,51 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp" />
+    <TextView
+        android:id="@+id/BirthDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date Of Birth:"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/addressValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/DateBirthValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/addressValue"
+        app:layout_constraintStart_toEndOf="@id/BirthDateView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/BirthTimeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time Of Birth:"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/DateBirthValue"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/BirthTimeValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20dp"
+        app:layout_constraintTop_toBottomOf="@id/DateBirthValue"
+        app:layout_constraintStart_toEndOf="@id/BirthTimeView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp" />
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkedBox"
@@ -118,18 +163,8 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/addressValue"
+        app:layout_constraintTop_toBottomOf="@id/BirthTimeValue"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/DeleteStudentBtn"
-        android:layout_marginEnd="8dp" />
 
     <Button
         android:id="@+id/DeleteStudentBtn"
@@ -137,19 +172,8 @@
         android:layout_height="wrap_content"
         android:text="Delete Student"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backButton"
-        app:layout_constraintEnd_toStartOf="@id/EditStudentBtn"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
-
-    <Button
-        android:id="@+id/EditStudentBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Student"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/DeleteStudentBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

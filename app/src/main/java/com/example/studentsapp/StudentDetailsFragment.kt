@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -20,8 +21,6 @@ class StudentDetailsFragment : Fragment() {
     var phoneValue: TextView?= null
     var addressValue: TextView?= null
     var checkedBox: MaterialCheckBox?= null
-    var backButton: Button?= null
-    var editStudentBtn: Button?= null
     var deleteStudentBtn: Button?= null
 
     //get the data from the bundle
@@ -47,16 +46,25 @@ class StudentDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.student_details, container, false)
-
         setUp(view)
 
-        backButton?.setOnClickListener{
-            Navigation.findNavController(view).popBackStack()
+        deleteStudentBtn?.setOnClickListener {
+            val studentId=id
+            if(studentId!=null){
+                Model.shared.deleteStudent(studentId)
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Deleted")
+                    .setMessage("Student deleted successfully!")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                        parentFragmentManager.popBackStack()
+                    }
+                    .show()
+            }
         }
-
-        editStudentBtn?.setOnClickListener{
-            Navigation.findNavController(view).navigate(R.id.action_studentDetailsFragment_to_editStudentFragment)
-        }
+//        editStudentBtn?.setOnClickListener{
+//            Navigation.findNavController(view).navigate(R.id.action_studentDetailsFragment_to_editStudentFragment)
+//        }
 
         return view
     }
@@ -69,9 +77,7 @@ class StudentDetailsFragment : Fragment() {
         addressValue = view?.findViewById(R.id.addressValue)
         checkedBox = view?.findViewById(R.id.checkedBox)
 
-        //get the buttons from the layout
-        backButton = view?.findViewById(R.id.backButton)
-        editStudentBtn = view?.findViewById(R.id.EditStudentBtn)
+        //get the delete button from the layout
         deleteStudentBtn = view?.findViewById(R.id.DeleteStudentBtn)
 
         //set the values of the fields
@@ -84,19 +90,6 @@ class StudentDetailsFragment : Fragment() {
 
     }
 
-//
-//    //set the click listeners for the buttons
-//    backButton.setOnClickListener {
-//        finish()
-//    }
-//    deleteStudentBtn.setOnClickListener {
-//        val studentId=id
-//        if(studentId!=null){
-//            Model.shared.deleteStudent(studentId)
-//            finish()
-//        }
-//    }
-//
 //    editStudentBtn.setOnClickListener {
 //        val intent= Intent(this,EditStudent::class.java)
 //
@@ -112,23 +105,7 @@ class StudentDetailsFragment : Fragment() {
 //
 //}
 //
-//override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//    super.onActivityResult(requestCode, resultCode, data)
-//
-//    if (requestCode == 100 && resultCode == RESULT_OK) {
-//        //get the update data after edit student
-//        val updatedName = data?.getStringExtra("student_name")
-//        val updatedPhone = data?.getStringExtra("student_phone")
-//        val updatedAddress = data?.getStringExtra("student_address")
-//        val updatedIsChecked = data?.getBooleanExtra("student_isChecked", false)
-//
-//        //update the fields with the new data
-//        nameValue?.text = updatedName
-//        phoneValue?.text = updatedPhone
-//        addressValue?.text = updatedAddress
-//        checkedBox?.isChecked = updatedIsChecked ?: false
-//    }
-//}
+
 
 
 

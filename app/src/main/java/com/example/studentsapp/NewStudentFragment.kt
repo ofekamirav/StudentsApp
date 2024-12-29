@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
@@ -22,7 +23,6 @@ class NewStudentFragment : Fragment() {
     var addressEditText: TextInputEditText?=null
     var checkBox: MaterialCheckBox?=null
     var addStudentButton: Button ?= null
-    var cancelButton: Button ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +41,6 @@ class NewStudentFragment : Fragment() {
 
         addStudentButton?.setOnClickListener(::onAddStudentClicked)
 
-        cancelButton?.setOnClickListener(::onCancelClicked)
-
         return view
     }
 
@@ -59,17 +57,9 @@ class NewStudentFragment : Fragment() {
         addressEditText = view?.findViewById(R.id.AddressEditText)
         checkBox = view?.findViewById(R.id.checkBox)
         addStudentButton = view?.findViewById(R.id.AddStudentButton)
-        cancelButton = view?.findViewById(R.id.CancelBTN)
 
     }
 
-    private fun closeFragment() {
-        parentFragmentManager.popBackStack()
-    }
-
-    private fun onCancelClicked(view: View?){
-        closeFragment()
-    }
     private fun onAddStudentClicked(view: View?){
         val student = Student(
             nameEditText?.text.toString(),
@@ -83,8 +73,14 @@ class NewStudentFragment : Fragment() {
         Log.d("NewStudentFragment", "Student added: $student")
         Log.d("NewStudentFragment", "Students in Model: ${Model.shared.students}")
 
-        closeFragment()
-
+        AlertDialog.Builder(requireContext())
+            .setTitle("Saved")
+            .setMessage("Student added successfully!")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+                parentFragmentManager.popBackStack()
+            }
+            .show()
     }
 
 }

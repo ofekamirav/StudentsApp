@@ -6,5 +6,6 @@
         android:id="@+id/newStudentFragment"
         android:icon="@drawable/add_student_icon"
         android:title="Add Student"
+        android:background="@android:color/black"
         app:showAsAction="always" />
 </menu>
