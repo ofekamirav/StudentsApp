@@ -11,9 +11,13 @@ import com.example.studentsapp.model.Student
 
 
 class StudentsAdapter(
-    private val students: MutableList<Student>,
+    private var students: List<Student>?,
     var listener: OnStudentClickListener? = null
 ) :  RecyclerView.Adapter<StudentViewHolder>(){
+
+    fun set(students: List<Student>?){
+        this.students = students
+    }
 
     //אתחול של שורה ברשימה שלנו
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
@@ -27,11 +31,11 @@ class StudentsAdapter(
         }
         //כמה פריטים יופיעו ברשימה
         override fun getItemCount(): Int {
-            return students.size
+            return students?.size ?: 0
         }
         //הזרקת המידע הרלוונטי לאותה שורה שיצרנו
         override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-            val student = students[position]
+            val student = students?.get(position)
            holder.bind(student, position)
 
         }

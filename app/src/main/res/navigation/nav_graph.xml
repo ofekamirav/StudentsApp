@@ -13,20 +13,8 @@
             android:id="@+id/action_studentsListfragment_to_studentDetailsFragment"
             app:destination="@id/studentDetailsFragment" />
         <argument
-            android:name="studentName"
-            app:argType="string" />
-        <argument
             android:name="studentId"
             app:argType="string" />
-        <argument
-            android:name="studentPhone"
-            app:argType="string" />
-        <argument
-            android:name="studentAddress"
-            app:argType="string" />
-        <argument
-            android:name="isChecked"
-            app:argType="boolean" />
 
     </fragment>
     <fragment
@@ -37,20 +25,9 @@
             android:id="@+id/action_studentDetailsFragment_to_editStudentFragment"
             app:destination="@id/editStudentFragment" />
         <argument
-            android:name="studentName"
-            app:argType="string" />
-        <argument
             android:name="studentId"
             app:argType="string" />
-        <argument
-            android:name="studentPhone"
-            app:argType="string" />
-        <argument
-            android:name="studentAddress"
-            app:argType="string" />
-        <argument
-            android:name="isChecked"
-            app:argType="boolean" />
+
     </fragment>
     <fragment
         android:id="@+id/editStudentFragment"

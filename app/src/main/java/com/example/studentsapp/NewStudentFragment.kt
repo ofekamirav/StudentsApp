@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.example.studentsapp.databinding.NewStudentBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -17,12 +18,7 @@ import com.google.android.material.textfield.TextInputEditText
 
 class NewStudentFragment : Fragment() {
 
-    var nameEditText: TextInputEditText?=null
-    var idEditText: TextInputEditText?=null
-    var phoneEditText: TextInputEditText?=null
-    var addressEditText: TextInputEditText?=null
-    var checkBox: MaterialCheckBox?=null
-    var addStudentButton: Button ?= null
+    private var binding: NewStudentBinding?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +29,12 @@ class NewStudentFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.new_student, container, false)
 
-        setUp(view)
+        binding= NewStudentBinding.inflate(inflater,container,false)
 
+        binding?.AddStudentButton?.setOnClickListener(::onAddStudentClicked)
 
-        addStudentButton?.setOnClickListener(::onAddStudentClicked)
-
-        return view
+        return binding?.root
     }
 
     //erase the add button from the menu
@@ -50,28 +43,26 @@ class NewStudentFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private fun setUp(view: View?){
-        nameEditText= view?.findViewById(R.id.NameEditText)
-        idEditText = view?.findViewById(R.id.IDEditText)
-        phoneEditText = view?.findViewById(R.id.PhoneEditText)
-        addressEditText = view?.findViewById(R.id.AddressEditText)
-        checkBox = view?.findViewById(R.id.checkBox)
-        addStudentButton = view?.findViewById(R.id.AddStudentButton)
-
+    override fun onDestroy() {
+        super.onDestroy()
+        binding=null
     }
 
-    private fun onAddStudentClicked(view: View?){
+
+    private fun onAddStudentClicked(view: View){
+        binding?.progressBar?.visibility=View.VISIBLE
         val student = Student(
-            nameEditText?.text.toString(),
-            idEditText?.text.toString(),
-            phoneEditText?.text.toString(),
-            addressEditText?.text.toString(),
-            checkBox?.isChecked?:false
+            name=binding?.NameEditText?.text.toString(),
+            id=binding?.IDEditText?.text.toString(),
+            address = binding?.AddressEditText?.text.toString(),
+            phone = binding?.PhoneEditText?.text.toString(),
+            isChecked = false
         )
 
-        Model.shared.students.add(student)
-        Log.d("NewStudentFragment", "Student added: $student")
-        Log.d("NewStudentFragment", "Students in Model: ${Model.shared.students}")
+        Model.shared.addStudent(student){
+            binding?.progressBar?.visibility=View.GONE
+            Log.d("NewStudentFragment", "Student added successfully!")
+        }
 
         AlertDialog.Builder(requireContext())
             .setTitle("Saved")
