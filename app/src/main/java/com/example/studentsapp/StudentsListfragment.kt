@@ -23,7 +23,6 @@ class StudentsListfragment : Fragment()  {
     var students: List<Student> = ArrayList()
     private var adapter: StudentsAdapter?= null
     private var recyclerView: RecyclerView?= null
-    var progressBar: ProgressBar? = null
 
     private var binding: FragmentStudentListBinding? = null
 

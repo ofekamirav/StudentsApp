@@ -58,5 +58,13 @@ class Model private constructor() {
         }
     }
 
+    fun updateStudent(student: Student, callback: EmptyCallback) {
+        executor.execute {
+            database.studentDao().UpdateStudent(student)
+            mainHandler.post {
+                callback()
+            }
+        }
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.example.studentsapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,7 @@ class MainActivity: AppCompatActivity() {
 
     var navController: NavController? = null
     var navHostFragment: NavHostFragment? = null
+    internal var currentStudentId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +53,13 @@ class MainActivity: AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> navController?.popBackStack()
-            R.id.editStudentFragment-> navController?.navigate(R.id.editStudentFragment)
-            else -> navController?.let{NavigationUI.onNavDestinationSelected(item, it)}//works for all fragments
+            R.id.editStudentFragment -> {
+                val bundle = Bundle().apply {
+                    putString("studentId", currentStudentId)
+                }
+                navController?.navigate(R.id.action_global_editStudentFragment, bundle)
+            }
+            else -> navController?.let { NavigationUI.onNavDestinationSelected(item, it) }
         }
         return true
     }
