@@ -1,106 +1,104 @@
 package com.example.studentsapp
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity.RESULT_OK
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.studentsapp.databinding.EditStudentBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textfield.TextInputEditText
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditStudentFragment : Fragment() {
 
-    var nameEditText: TextInputEditText?= null
-    var idEditText: TextInputEditText?= null
-    var phoneEditText: TextInputEditText?= null
-    var addressEditText: TextInputEditText?= null
-    var checkBox: MaterialCheckBox?= null
-    var cancelButton: Button?= null
-    var saveButton: Button?= null
+    private var binding: EditStudentBinding? = null
+    private var studentId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.edit_student, container, false)
+        binding = EditStudentBinding.inflate(inflater, container, false)
 
-//        //get the data from the intent
-//        val studentId = intent.getStringExtra("student_id") ?: ""
-//        val studentName = intent.getStringExtra("student_name") ?: ""
-//        val studentPhone = intent.getStringExtra("student_phone") ?: ""
-//        val studentAddress = intent.getStringExtra("student_address") ?: ""
-//        val studentIsChecked = intent.getBooleanExtra("student_isChecked", false)
-
-        setUp(view)
-
-//        cancelButton?.setOnClickListener()
-//        saveButton?.setOnClickListener()
+        //get the student id from the arguments
+        studentId = arguments?.let { EditStudentFragmentArgs.fromBundle(it).studentId }
+        Log.d("TAG", "Recieved studentId: $studentId")
 
 
+        //get the student by id
+        studentId?.let { id ->
+            lifecycleScope.launch {
+                Model.shared.getStudentById(id) { studentList ->
+                    if (studentList.isNotEmpty()) {
+                        val student = studentList[0]
+                        binding?.NameEditText?.setText(student.name)
+                        binding?.IDEditText?.setText(student.id)
+                        binding?.AddressEditText?.setText(student.address)
+                        binding?.PhoneEditText?.setText(student.phone)
+                        binding?.checkBox?.isChecked = student.isChecked
+                    }
+                }
+            }
+        }
 
-        return view
+        binding?.UpdateStudentBTN?.setOnClickListener(::onUpdateStudentClicked)
+
+        return binding?.root
     }
 
-    private fun setUp(view: View?){
-        //get the fields from the layout
-        nameEditText = view?.findViewById(R.id.NameEditText)
-        idEditText = view?.findViewById(R.id.IDEditText)
-        phoneEditText = view?.findViewById(R.id.PhoneEditText)
-        addressEditText = view?.findViewById(R.id.AddressEditText)
-        checkBox = view?.findViewById(R.id.checkBox)
-
-        //get the Buttons from the layout
-        saveButton = view?.findViewById(R.id.UpdateStudentBTN)
-        cancelButton = view?.findViewById(R.id.CancelBTN)
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
-//    //set the data to the fields
-//    nameEditText?.setText(studentName)
-//    idEditText?.setText(studentId)
-//    phoneEditText?.setText(studentPhone)
-//    addressEditText?.setText(studentAddress)
-//    checkBox?.isChecked = studentIsChecked
-//
-//
-//
-//    saveButton.setOnClickListener {
-//        val UpdateName= nameEditText.text.toString()
-//        val UpdateId= idEditText.text.toString()
-//        val UpdatePhone= phoneEditText.text.toString()
-//        val UpdateAddress= addressEditText.text.toString()
-//        val UpdateIsChecked= checkBox.isChecked
-//
-//        //update the data in the Model list
-//        val index = Model.shared.students.indexOfFirst { it.id == studentId }
-//        if (index != -1) {
-//            Model.shared.students[index]=
-//                Student(UpdateName, UpdateId, UpdatePhone, UpdateAddress, UpdateIsChecked)
-//        }
-//        // send Updated data to the StudentDetails Activity
-//        val resultIntent = Intent()
-//        resultIntent.putExtra("student_name", UpdateName)
-//        resultIntent.putExtra("student_id", UpdateId)
-//        resultIntent.putExtra("student_phone", UpdatePhone)
-//        resultIntent.putExtra("student_address", UpdateAddress)
-//        resultIntent.putExtra("student_isChecked", UpdateIsChecked)
-//        setResult(RESULT_OK, resultIntent)
-//
-//        finish()
-//    }
-//
-//    cancelButton.setOnClickListener {
-//        finish()
-//    }
+    private fun onUpdateStudentClicked(view: View) {
+        val name = binding?.NameEditText?.text.toString()
+        val id = binding?.IDEditText?.text.toString()
+        val address = binding?.AddressEditText?.text.toString()
+        val phone = binding?.PhoneEditText?.text.toString()
+        val isChecked = binding?.checkBox?.isChecked ?: false
+
+        //handle empty fields
+        if (name.isEmpty() || id.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(requireContext(), "Please fill all required fields.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val updatedStudent = Student(
+            name = name,
+            id = id,
+            address = address,
+            phone = phone,
+            isChecked = isChecked
+        )
 
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            Log.d("TAG", "Updating student: $updatedStudent")
+            Model.shared.updateStudent(updatedStudent) {
+                Log.d("TAG", "Student updated successfully!")
+            }
+            withContext(Dispatchers.Main) {
+                binding?.progressBar?.visibility = View.VISIBLE
 
-}
+                binding?.progressBar?.visibility = View.GONE
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Saved")
+                    .setMessage("Student updated successfully!")
+                    .setPositiveButton("OK") { dialog, _ ->
+                        dialog.dismiss()
+                        parentFragmentManager.popBackStack()
+                    }
+                    .show()
+            }
+            }
+        }
+    }
+

@@ -7,14 +7,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.studentsapp.databinding.NewStudentBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
-import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textfield.TextInputEditText
+
 
 class NewStudentFragment : Fragment() {
 
@@ -56,12 +54,12 @@ class NewStudentFragment : Fragment() {
             id=binding?.IDEditText?.text.toString(),
             address = binding?.AddressEditText?.text.toString(),
             phone = binding?.PhoneEditText?.text.toString(),
-            isChecked = false
+            isChecked = binding?.checkBox?.isChecked ?: false
         )
 
         Model.shared.addStudent(student){
             binding?.progressBar?.visibility=View.GONE
-            Log.d("NewStudentFragment", "Student added successfully!")
+            Log.d("TAG", "Student added successfully!")
         }
 
         AlertDialog.Builder(requireContext())

@@ -4,7 +4,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/studentsListfragment">
 
-
     <fragment
         android:id="@+id/studentsListfragment"
         android:name="com.example.studentsapp.StudentsListfragment"
@@ -15,8 +14,8 @@
         <argument
             android:name="studentId"
             app:argType="string" />
-
     </fragment>
+
     <fragment
         android:id="@+id/studentDetailsFragment"
         android:name="com.example.studentsapp.StudentDetailsFragment"
@@ -27,15 +26,28 @@
         <argument
             android:name="studentId"
             app:argType="string" />
-
     </fragment>
+
     <fragment
         android:id="@+id/editStudentFragment"
         android:name="com.example.studentsapp.EditStudentFragment"
-        android:label="Edit Student" />
+        android:label="Edit Student">
+        <argument
+            android:name="studentId"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:id="@+id/newStudentFragment"
         android:name="com.example.studentsapp.NewStudentFragment"
         android:label="Add Student" />
+
     <action android:id="@+id/action_global_newStudentFragment" app:destination="@id/newStudentFragment" />
+
+    <action android:id="@+id/action_global_editStudentFragment" app:destination="@id/editStudentFragment">
+        <argument
+            android:name="studentId"
+            app:argType="string"
+            app:nullable="false" />
+    </action>
 </navigation>

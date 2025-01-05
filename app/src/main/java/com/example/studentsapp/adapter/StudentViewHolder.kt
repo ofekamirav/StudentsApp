@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.R
+import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 import com.google.android.material.checkbox.MaterialCheckBox
 
@@ -30,13 +31,28 @@ class StudentViewHolder(
             studentID= itemView.findViewById(R.id.IDTextView)
             studentChecked= itemView.findViewById(R.id.checkBox)
 
-            studentChecked?.apply {
-                setOnClickListener { view ->
-                    (tag as? Int)?.let { tag ->
-                        student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
+        studentChecked?.apply {
+            setOnClickListener { view ->
+                (tag as? Int)?.let { tag ->
+                    student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
+                    // עדכון הסטודנט ב-DB אחרי שינוי ה-checkbox
+                    student?.let {
+                        // לעדכן ב-Model כאן
+                        Model.shared.updateStudent(it) {
+                            Log.d("TAG", "Student updated in DB: ${student?.name}")
+                        }
                     }
                 }
             }
+        }
+
+//            studentChecked?.apply {
+//                setOnClickListener { view ->
+//                    (tag as? Int)?.let { tag ->
+//                        student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
+//                    }
+//                }
+//            }
 
             itemView.setOnClickListener {
                 student?.let { listener?.onStudentClick(it) }
@@ -57,6 +73,12 @@ class StudentViewHolder(
 
         studentChecked?.setOnCheckedChangeListener { _, isChecked ->
             student?.isChecked = isChecked
+            // עדכון הסטודנט ב-DB כשה-checkbox משתנה
+            student?.let {
+                Model.shared.updateStudent(it) {
+                    Log.d("TAG", "Student's checkbox updated in DB")
+                }
+            }
         }
     }
 

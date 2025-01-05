@@ -48,6 +48,8 @@ class StudentDetailsFragment : Fragment() {
         binding = StudentDetailsBinding.inflate(inflater, container, false)
 
         val studentId = arguments?.let { StudentDetailsFragmentArgs.fromBundle(it).studentId }
+        (activity as? MainActivity)?.currentStudentId = studentId
+        Log.d("TAG", "studentId: $studentId")
 
         if (studentId != null) {
             Model.shared.getStudentById(studentId) { studentList ->
@@ -62,8 +64,10 @@ class StudentDetailsFragment : Fragment() {
 
                 }
             }
+        }
 
-            binding?.DeleteStudentBtn?.setOnClickListener {
+        binding?.DeleteStudentBtn?.setOnClickListener {
+            if (studentId != null) {
                 Model.shared.getStudentById(studentId) { studentList ->
                     if (studentList.isNotEmpty()) {
                         val student = studentList[0]
@@ -81,12 +85,6 @@ class StudentDetailsFragment : Fragment() {
                     }
                 }
             }
-
-
-//        editStudentBtn?.setOnClickListener{
-//            Navigation.findNavController(view).navigate(R.id.action_studentDetailsFragment_to_editStudentFragment)
-//        }
-
         }
         return binding?.root
     }
