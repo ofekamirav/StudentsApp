@@ -5,6 +5,25 @@
     app:startDestination="@id/studentsListfragment">
 
     <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.studentsapp.LoginFragment"
+        android:label="Login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.studentsapp.RegisterFragment"
+        android:label="Register">
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/studentsListfragment"
         android:name="com.example.studentsapp.StudentsListfragment"
         android:label="Students List">

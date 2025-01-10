@@ -34,10 +34,11 @@
         android:id="@+id/nameValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="John Doe"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/nameTextView"
         app:layout_constraintTop_toBottomOf="@id/StudentPic" />
 
     <TextView
@@ -56,10 +57,11 @@
         android:id="@+id/IdValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="123456789"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/IdTextView"
         app:layout_constraintTop_toBottomOf="@id/nameValue" />
 
     <TextView
@@ -78,10 +80,11 @@
         android:id="@+id/phoneValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="050-1234567"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/PhoneTextView"
         app:layout_constraintTop_toBottomOf="@id/IdValue" />
 
     <TextView
@@ -100,10 +103,11 @@
         android:id="@+id/addressValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="123 Street, City"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/AddressTextView"
         app:layout_constraintTop_toBottomOf="@id/phoneValue" />
 
     <TextView
@@ -122,10 +126,11 @@
         android:id="@+id/DateBirthValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="01/01/2000"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BirthDateView"
         app:layout_constraintTop_toBottomOf="@id/addressValue" />
 
     <TextView
@@ -144,10 +149,11 @@
         android:id="@+id/BirthTimeValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="12:00 PM"
         android:textSize="20sp"
-        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BirthTimeView"
         app:layout_constraintTop_toBottomOf="@id/DateBirthValue" />
 
     <CheckBox
@@ -165,6 +171,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="#95B0CD"
+        android:textColor="@color/white"
         android:text="Delete Student"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

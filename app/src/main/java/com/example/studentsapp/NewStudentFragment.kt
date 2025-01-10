@@ -12,11 +12,15 @@ import androidx.fragment.app.Fragment
 import com.example.studentsapp.databinding.NewStudentBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import java.util.Calendar
 
 
 class NewStudentFragment : Fragment() {
 
     private var binding: NewStudentBinding?=null
+    private var calendar: Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,10 @@ class NewStudentFragment : Fragment() {
         binding= NewStudentBinding.inflate(inflater,container,false)
 
         binding?.AddStudentButton?.setOnClickListener(::onAddStudentClicked)
+
+        binding?.BirthDateEditText?.setOnClickListener(::onBirthDateClicked)
+
+        binding?.BirthTimeEditText?.setOnClickListener(::onBirthTimeClicked)
 
         return binding?.root
     }
@@ -54,7 +62,9 @@ class NewStudentFragment : Fragment() {
             id=binding?.IDEditText?.text.toString(),
             address = binding?.AddressEditText?.text.toString(),
             phone = binding?.PhoneEditText?.text.toString(),
-            isChecked = binding?.checkBox?.isChecked ?: false
+            isChecked = binding?.checkBox?.isChecked ?: false,
+            BirthDate = binding?.BirthDateEditText?.text.toString(),
+            BirthTime = binding?.BirthTimeEditText?.text.toString()
         )
 
         Model.shared.addStudent(student){
@@ -70,6 +80,31 @@ class NewStudentFragment : Fragment() {
                 parentFragmentManager.popBackStack()
             }
             .show()
+    }
+
+    private fun onBirthDateClicked(view: View){
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val selectedDate = "$dayOfMonth/${month + 1}/$year"
+                binding?.BirthDateEditText?.setText(selectedDate)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+    private fun onBirthTimeClicked(view: View){
+        TimePickerDialog(
+            requireContext(),
+            { _, hourOfDay, minute ->
+                val selectedTime = String.format("%02d:%02d", hourOfDay, minute)
+                binding?.BirthTimeEditText?.setText(selectedTime)
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true // 24-hour format
+        ).show()
     }
 
 }
