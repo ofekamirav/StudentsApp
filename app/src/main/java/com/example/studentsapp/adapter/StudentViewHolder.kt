@@ -46,14 +46,6 @@ class StudentViewHolder(
             }
         }
 
-//            studentChecked?.apply {
-//                setOnClickListener { view ->
-//                    (tag as? Int)?.let { tag ->
-//                        student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
-//                    }
-//                }
-//            }
-
             itemView.setOnClickListener {
                 student?.let { listener?.onStudentClick(it) }
                 Log.d("TAG", "Student clicked: ${student?.name}")

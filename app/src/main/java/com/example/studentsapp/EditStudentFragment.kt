@@ -43,6 +43,8 @@ class EditStudentFragment : Fragment() {
                         binding?.AddressEditText?.setText(student.address)
                         binding?.PhoneEditText?.setText(student.phone)
                         binding?.checkBox?.isChecked = student.isChecked
+                        binding?.BirthDateEditText?.setText(student.BirthDate)
+                        binding?.BirthTimeEditText?.setText(student.BirthTime)
                     }
                 }
             }
@@ -64,6 +66,8 @@ class EditStudentFragment : Fragment() {
         val address = binding?.AddressEditText?.text.toString()
         val phone = binding?.PhoneEditText?.text.toString()
         val isChecked = binding?.checkBox?.isChecked ?: false
+        val birthDate = binding?.BirthDateEditText?.text.toString()
+        val birthTime = binding?.BirthTimeEditText?.text.toString()
 
         //handle empty fields
         if (name.isEmpty() || id.isEmpty() || phone.isEmpty()) {
@@ -76,7 +80,9 @@ class EditStudentFragment : Fragment() {
             id = id,
             address = address,
             phone = phone,
-            isChecked = isChecked
+            isChecked = isChecked,
+            BirthDate = birthDate,
+            BirthTime = birthTime
         )
 
 

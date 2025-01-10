@@ -61,6 +61,8 @@ class StudentDetailsFragment : Fragment() {
                     binding?.phoneValue?.text = student.phone
                     binding?.addressValue?.text = student.address
                     binding?.checkedBox?.isChecked = student.isChecked
+                    binding?.DateBirthValue?.text = student.BirthDate
+                    binding?.BirthTimeValue?.text = student.BirthTime
 
                 }
             }

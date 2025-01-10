@@ -8,4 +8,10 @@
         android:title="Edit Student"
         android:backgroundTint="@color/white"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/LogoutButton"
+        android:icon="@drawable/logout_icon"
+        android:title="Logout"
+        app:showAsAction="always"
+        />
 </menu>
