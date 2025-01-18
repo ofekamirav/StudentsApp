@@ -13,7 +13,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.studentsapp.databinding.ActivityMainBinding
+import com.example.studentsapp.model.Student
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity: AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class MainActivity: AppCompatActivity() {
     var navHostFragment: NavHostFragment? = null
     internal var currentStudentId: String? = null
     private var auth: FirebaseAuth? = null
+    private var database: FirebaseFirestore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,7 @@ class MainActivity: AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        //Initialize Firebase Auth and Firestore DB
         auth = FirebaseAuth.getInstance()
 
         //set up the toolbar

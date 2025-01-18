@@ -7,31 +7,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.R
+import com.example.studentsapp.databinding.StudentListRowBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.squareup.picasso.Picasso
 
 //מנהל ומשייך את הנתונים עבור כל שורה ברשימה
 class StudentViewHolder(
-    itemView: View,
+    private val binding: StudentListRowBinding,
     private val listener: OnStudentClickListener?
-): RecyclerView.ViewHolder(itemView) {
+): RecyclerView.ViewHolder(binding.root) {
 
 
     private var student: Student? = null
 
-    var studentPic: ImageView? = itemView.findViewById(R.id.StudentPic)
-    var studentName: TextView? = itemView.findViewById(R.id.NameTextView)
-    var studentID: TextView? = itemView.findViewById(R.id.IDTextView)
-    var studentChecked: MaterialCheckBox? = itemView.findViewById(R.id.checkBox)
-
     init {
-            studentPic?.setImageResource(R.drawable.student_icon)
-            studentName= itemView.findViewById(R.id.NameTextView)
-            studentID= itemView.findViewById(R.id.IDTextView)
-            studentChecked= itemView.findViewById(R.id.checkBox)
-
-        studentChecked?.apply {
+        binding.checkBox.apply {
             setOnClickListener { view ->
                 (tag as? Int)?.let { tag ->
                     student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
@@ -54,21 +46,30 @@ class StudentViewHolder(
 
         }
 
-    //מיפוי נתוני הסטודנט לרכיבי הUI
+    //של שורה אחת מיפוי נתוני הסטודנט לרכיבי הUI
     fun bind(student: Student?, position: Int) {
         this.student = student
-        studentPic?.setImageResource(R.drawable.student_icon)
-        studentName?.text = student?.name
-        studentID?.text = student?.id
-        studentChecked?.isChecked = student?.isChecked ?: false
-        studentChecked?.tag = position // לשמירת המיקום
+        binding.NameTextView.text = student?.name
+        binding.IDTextView.text = student?.id
+        binding.checkBox.tag = position // לשמירת המיקום
 
-        studentChecked?.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             student?.isChecked = isChecked
             // עדכון הסטודנט ב-DB כשה-checkbox משתנה
             student?.let {
                 Model.shared.updateStudent(it) {
                     Log.d("TAG", "Student's checkbox updated in DB")
+                }
+            }
+            //load image to the row
+            student?.avatarUrl?.let{ avatarUrl ->
+                if (avatarUrl.isNotBlank()) {
+                    Picasso.get()
+                        .load(avatarUrl)
+                        .resize(50,50)
+                        .placeholder(R.drawable.student_icon)
+                        .error(R.drawable.ic_launcher_foreground)
+                        .into(binding.StudentPic)
                 }
             }
         }

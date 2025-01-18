@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity
 data class Student(
 
+    val avatarUrl: String = "",
     val name: String = "",
     @PrimaryKey val id: String = "",
     val phone: String = "",
@@ -19,6 +20,7 @@ data class Student(
     val json : Map<String, Any>
         get() {
             return hashMapOf(
+                AVATAR_URL_KEY to avatarUrl,
                 ID_KEY to id,
                 NAME_KEY to name,
                 ADDRESS_KEY to address,
@@ -31,6 +33,7 @@ data class Student(
 
     companion object{
 
+        private const val AVATAR_URL_KEY = "avatarUrl"
         private const val ID_KEY = "id"
         private const val NAME_KEY = "name"
         private const val PHONE_KEY = "phone"
@@ -40,6 +43,7 @@ data class Student(
         private const val BIRTHTIME_KEY = "BirthTime"
 
         fun fromJson(json: Map<String, Any>) : Student {
+            val avatarUrl = json[AVATAR_URL_KEY] as? String ?: ""
             val id = json[ID_KEY] as? String ?: ""
             val name = json[NAME_KEY] as? String ?: ""
             val address = json[ADDRESS_KEY] as? String ?: ""
@@ -49,6 +53,7 @@ data class Student(
             val BirthTime = json[BIRTHTIME_KEY] as? String ?: ""
 
             return Student(
+                avatarUrl=avatarUrl,
                 name=name,
                 id=id,
                 address=address,

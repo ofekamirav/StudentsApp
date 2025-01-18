@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.studentsapp.databinding.EditStudentBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,12 +46,24 @@ class EditStudentFragment : Fragment() {
                         binding?.checkBox?.isChecked = student.isChecked
                         binding?.BirthDateEditText?.setText(student.BirthDate)
                         binding?.BirthTimeEditText?.setText(student.BirthTime)
+
+                        // Load student image with Picasso
+                        if (student.avatarUrl.isNotEmpty()) {
+                            Picasso.get()
+                                .load(student.avatarUrl) // כתובת התמונה
+                                .placeholder(R.drawable.student_icon) // תמונה שתוצג בזמן הטעינה
+                                .error(R.drawable.ic_launcher_foreground) // תמונה שתוצג אם יש שגיאה
+                                .into(binding?.StudentPic)
+                        }
                     }
                 }
             }
         }
 
         binding?.UpdateStudentBTN?.setOnClickListener(::onUpdateStudentClicked)
+        binding?.CancelBTN?.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
 
         binding?.CancelBTN?.setOnClickListener {
             parentFragmentManager.popBackStack()

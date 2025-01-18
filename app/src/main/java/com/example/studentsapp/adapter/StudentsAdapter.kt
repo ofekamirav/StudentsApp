@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentsapp.R
+import com.example.studentsapp.databinding.StudentListRowBinding
 import com.example.studentsapp.model.Student
 
 
@@ -21,13 +22,10 @@ class StudentsAdapter(
 
     //אתחול של שורה ברשימה שלנו
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
-        val inflation = LayoutInflater.from(parent.context)
-        val view: View = inflation.inflate(
-                R.layout.student_list_row,
-                parent,
-                false
-            )
-         return StudentViewHolder(view, listener)
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = StudentListRowBinding.inflate(inflater, parent, false)
+
+            return StudentViewHolder(binding, listener)
         }
         //כמה פריטים יופיעו ברשימה
         override fun getItemCount(): Int {
@@ -36,7 +34,7 @@ class StudentsAdapter(
         //הזרקת המידע הרלוונטי לאותה שורה שיצרנו
         override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
             val student = students?.get(position)
-           holder.bind(student, position)
+            holder.bind(student, position)
 
         }
 

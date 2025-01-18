@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import com.example.studentsapp.databinding.StudentDetailsBinding
 import com.example.studentsapp.model.Model
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.squareup.picasso.Picasso
 
 class StudentDetailsFragment : Fragment() {
 
@@ -63,6 +64,16 @@ class StudentDetailsFragment : Fragment() {
                     binding?.checkedBox?.isChecked = student.isChecked
                     binding?.DateBirthValue?.text = student.BirthDate
                     binding?.BirthTimeValue?.text = student.BirthTime
+
+
+                    // Loading student image with Picasso
+                    if (student.avatarUrl.isNotEmpty()) {
+                        Picasso.get()
+                            .load(student.avatarUrl) // כתובת התמונה
+                            .placeholder(R.drawable.student_icon) // תמונה שתוצג בזמן הטעינה
+                            .error(R.drawable.ic_launcher_foreground) // תמונה שתוצג אם יש שגיאה
+                            .into(binding?.StudentPic)
+                    }
 
                 }
             }

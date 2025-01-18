@@ -4,6 +4,7 @@ import com.example.studentsapp.model.Student
 
 typealias StudentCallback = (List<Student>) -> Unit
 typealias EmptyCallback = () -> Unit
+typealias StringCallback = (String?) -> Unit
 
 object Constants {
 

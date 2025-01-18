@@ -1,16 +1,22 @@
 package com.example.studentsapp.model
 
+import android.graphics.Bitmap
+import android.util.Log
 import com.example.studentsapp.base.Constants.Collections.STUDENTS
 import com.example.studentsapp.base.EmptyCallback
+import com.example.studentsapp.base.StringCallback
 import com.example.studentsapp.base.StudentCallback
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.memoryCacheSettings
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 
 class FirebaseModel {
 
     private val database = Firebase.firestore
+    private val storage = Firebase.storage
 
     // Configure Firebase settings that not create ROOM local cache automatic
     init{
@@ -42,6 +48,7 @@ class FirebaseModel {
             .addOnSuccessListener {
                 callback()
             }
+        Log.d("TAG", "Student added successfully to Firestore with: ${student.json}")
     }
 
     fun deleteStudent(student: Student, callback: EmptyCallback) {
@@ -73,6 +80,26 @@ class FirebaseModel {
             .addOnFailureListener {
                 it.printStackTrace()
             }
+    }
+
+    fun uploadImage(image: Bitmap, name: String, callback: StringCallback){
+        val storageRef = storage.reference
+        val imagesRef = storageRef.child("images/$name.jpg")
+
+        val baos = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        var uploadTask = imagesRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            //need to handle with this error at final project
+            callback(null)
+        }.addOnSuccessListener { taskSnapshot ->
+            imagesRef.downloadUrl.addOnSuccessListener { uti ->
+                callback(uti.toString())
+            }
+        }
 
     }
+
 }
