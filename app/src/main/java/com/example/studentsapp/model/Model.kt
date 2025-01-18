@@ -1,8 +1,10 @@
 package com.example.studentsapp.model;
 
+import android.graphics.Bitmap
 import android.os.Looper
 import androidx.core.os.HandlerCompat
 import com.example.studentsapp.base.EmptyCallback
+import com.example.studentsapp.base.StringCallback
 import com.example.studentsapp.base.StudentCallback
 import com.example.studentsapp.model.dao.AppLocalDB
 import com.example.studentsapp.model.dao.AppLocalDBRepository
@@ -11,10 +13,13 @@ import java.util.concurrent.Executors
 
 class Model private constructor() {
 
-    private val database: AppLocalDBRepository = AppLocalDB().database
-    private val executor = Executors.newSingleThreadExecutor()//get out to outside thread
-    private val mainHandler = HandlerCompat.createAsync(Looper.getMainLooper())//go back to main thread
+    //Tell the server where to store the images
+    enum class Storage{
+        FIREBASE,
+        CLOUDINARY
+    }
     private val firebaseModel = FirebaseModel()
+    private val cloudinaryModel = CloudinaryModel()
 
     companion object {
         val shared = Model()
@@ -22,55 +27,66 @@ class Model private constructor() {
 
     fun getAllStudents(callback:StudentCallback) {
         firebaseModel.getAllStudents(callback)
-//        executor.execute {
-//            val students = database.studentDao().GetAllStudents()
-//            Thread.sleep(2500)//to add a progress indicator
-//            mainHandler.post {
-//                callback(students)
-//            }
-//
-//        }
     }
 
-    fun addStudent(student: Student, callback: EmptyCallback) {
-        firebaseModel.addStudent(student, callback)
-        //executor.execute {
-//            database.studentDao().InsertStudent(student)
-//            Thread.sleep(2500)//to add a progress indicator, we add this in the layout
-//            mainHandler.post {
-//                callback()
-//            }
-//        }
+    fun addStudent(student: Student, image: Bitmap?, storage: Storage, callback: EmptyCallback) {
+        firebaseModel.addStudent(student){
+            image?.let {
+                uploadTo(
+                    storage = storage,
+                    image = image,
+                    name = student.id,
+                    callback = { uri ->
+                        if (!uri.isNullOrBlank()) {
+                            val st = student.copy(avatarUrl = uri)
+                            firebaseModel.addStudent(st, callback)
+                        } else {
+                            callback()
+                        }
+                    },
+                )
+            } ?: run{
+                firebaseModel.addStudent(student, callback)
+            }
+        }
+    }
 
+    private fun uploadTo(storage: Storage, image: Bitmap, name: String, callback: (String?) -> Unit) {
+        when (storage) {
+            Storage.FIREBASE -> {
+                uploadImageToFirebase(image, name, callback)
+            }
+            Storage.CLOUDINARY -> {
+                uploadImageToCloudinary(
+                    image = image,
+                    name = name,
+                    onSuccess = callback,
+                    onError = { callback(null) }
+                )
+            }
+        }
     }
 
     fun deleteStudent(student: Student, callback: EmptyCallback) {
         firebaseModel.deleteStudent(student, callback)
-//        executor.execute {
-//            database.studentDao().DeleteStudent(student)
-//            mainHandler.post {
-//                callback()
-//            }
-//        }
+
     }
     fun getStudentById(id: String, callback: StudentCallback) {
         firebaseModel.getStudentById(id, callback)
-//        executor.execute {
-//            val student = database.studentDao().GetStudentById(id)
-//            mainHandler.post {
-//                callback(listOf(student))
-//            }
-//        }
+
     }
 
     fun updateStudent(student: Student, callback: EmptyCallback) {
         firebaseModel.updateStudent(student, callback)
-//        executor.execute {
-//            database.studentDao().UpdateStudent(student)
-//            mainHandler.post {
-//                callback()
-//            }
-//        }
+
+    }
+    private fun uploadImageToFirebase(image: Bitmap, name: String, callback: StringCallback ) {
+        firebaseModel.uploadImage(image, name, callback)
+    }
+
+    private fun uploadImageToCloudinary(image: Bitmap, name: String, onSuccess: StringCallback, onError: StringCallback) {
+        cloudinaryModel.uploadImage(image, name, onSuccess, onError)
+
     }
 
 }

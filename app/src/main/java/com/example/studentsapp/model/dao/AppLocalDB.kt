@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.example.studentsapp.base.MyApplication
 import com.example.studentsapp.model.Student
 
-@Database(entities = [Student::class], version = 1)
+@Database(entities = [Student::class], version = 2)
 abstract class AppLocalDBRepository : RoomDatabase() {
     abstract fun studentDao(): StudentDao
 

@@ -14,6 +14,9 @@ import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.drawable.BitmapDrawable
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import java.util.Calendar
 
 
@@ -21,6 +24,8 @@ class NewStudentFragment : Fragment() {
 
     private var binding: NewStudentBinding?=null
     private var calendar: Calendar = Calendar.getInstance()
+    private var cameraLauncher: ActivityResultLauncher<Void?>?=null
+    private var didSetprofileImage: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +39,23 @@ class NewStudentFragment : Fragment() {
 
         binding= NewStudentBinding.inflate(inflater,container,false)
 
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()){ bitmap ->
+            binding?.StudentPic?.setImageBitmap(bitmap)
+            didSetprofileImage = true
+        }
+        binding?.addPhotoButton?.setOnClickListener {
+            //open camera launcher
+            cameraLauncher?.launch(null)
+        }
+
+
         binding?.AddStudentButton?.setOnClickListener(::onAddStudentClicked)
 
         binding?.BirthDateEditText?.setOnClickListener(::onBirthDateClicked)
 
         binding?.BirthTimeEditText?.setOnClickListener(::onBirthTimeClicked)
+
+
 
         return binding?.root
     }
@@ -56,7 +73,6 @@ class NewStudentFragment : Fragment() {
 
 
     private fun onAddStudentClicked(view: View){
-        binding?.progressBar?.visibility=View.VISIBLE
         val student = Student(
             name=binding?.NameEditText?.text.toString(),
             id=binding?.IDEditText?.text.toString(),
@@ -66,12 +82,25 @@ class NewStudentFragment : Fragment() {
             BirthDate = binding?.BirthDateEditText?.text.toString(),
             BirthTime = binding?.BirthTimeEditText?.text.toString()
         )
+        binding?.progressBar?.visibility=View.VISIBLE
 
-        Model.shared.addStudent(student){
-            binding?.progressBar?.visibility=View.GONE
-            Log.d("TAG", "Student added successfully!")
+        if(didSetprofileImage) {
+
+            binding?.StudentPic?.isDrawingCacheEnabled = true
+            binding?.StudentPic?.buildDrawingCache()
+            val bitmap = (binding?.StudentPic?.drawable as BitmapDrawable).bitmap
+
+            Model.shared.addStudent(student, bitmap, Model.Storage.CLOUDINARY) {
+                binding?.progressBar?.visibility = View.GONE
+                Log.d("TAG", "Student added successfully!")
+            }
+
+        }else{
+            Model.shared.addStudent(student, null, Model.Storage.CLOUDINARY) {
+                binding?.progressBar?.visibility = View.GONE
+                Log.d("TAG", "Student added successfully!")
+            }
         }
-
         AlertDialog.Builder(requireContext())
             .setTitle("Saved")
             .setMessage("Student added successfully!")
