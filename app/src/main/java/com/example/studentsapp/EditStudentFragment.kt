@@ -52,6 +52,10 @@ class EditStudentFragment : Fragment() {
 
         binding?.UpdateStudentBTN?.setOnClickListener(::onUpdateStudentClicked)
 
+        binding?.CancelBTN?.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding?.root
     }
 
