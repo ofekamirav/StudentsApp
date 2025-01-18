@@ -65,6 +65,10 @@ class EditStudentFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        binding?.CancelBTN?.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         return binding?.root
     }
 
