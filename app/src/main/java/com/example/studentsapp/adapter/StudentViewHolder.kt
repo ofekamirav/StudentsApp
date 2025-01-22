@@ -1,50 +1,38 @@
 package com.example.studentsapp.adapter
 
 import android.util.Log
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.studentsapp.R
 import com.example.studentsapp.databinding.StudentListRowBinding
 import com.example.studentsapp.model.Model
 import com.example.studentsapp.model.Student
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.squareup.picasso.Picasso
 
 //מנהל ומשייך את הנתונים עבור כל שורה ברשימה
 class StudentViewHolder(
     private val binding: StudentListRowBinding,
-    private val listener: OnStudentClickListener?
+    private val listener: OnStudentClickListener?,
+    private val checkboxListener: OnStudentCheckboxChangeListener?
 ): RecyclerView.ViewHolder(binding.root) {
-
 
     private var student: Student? = null
 
     init {
-        binding.checkBox.apply {
-            setOnClickListener { view ->
-                (tag as? Int)?.let { tag ->
-                    student?.isChecked = (view as? MaterialCheckBox)?.isChecked ?: false
-                    // עדכון הסטודנט ב-DB אחרי שינוי ה-checkbox
-                    student?.let {
-                        // לעדכן ב-Model כאן
-                        Model.shared.updateStudent(it) {
-                            Log.d("TAG", "Student updated in DB: ${student?.name}")
-                        }
-                    }
-                }
+
+        // Handle checkbox clicks
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            student?.let {
+                it.isChecked = isChecked
+                checkboxListener?.onCheckboxChanged(it, isChecked)
             }
         }
 
-            itemView.setOnClickListener {
-                student?.let { listener?.onStudentClick(it) }
-                Log.d("TAG", "Student clicked: ${student?.name}")
-            }
-
-
+        // Handle item clicks
+        itemView.setOnClickListener {
+            student?.let { listener?.onStudentClick(it) }
         }
+    }
 
     //של שורה אחת מיפוי נתוני הסטודנט לרכיבי הUI
     fun bind(student: Student?, position: Int) {
@@ -53,27 +41,24 @@ class StudentViewHolder(
         binding.IDTextView.text = student?.id
         binding.checkBox.tag = position // לשמירת המיקום
 
-        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
-            student?.isChecked = isChecked
-            // עדכון הסטודנט ב-DB כשה-checkbox משתנה
-            student?.let {
-                Model.shared.updateStudent(it) {
-                    Log.d("TAG", "Student's checkbox updated in DB")
-                }
-            }
-            //load image to the row
-            student?.avatarUrl?.let{ avatarUrl ->
-                if (avatarUrl.isNotBlank()) {
-                    Picasso.get()
-                        .load(avatarUrl)
-                        .resize(50,50)
-                        .placeholder(R.drawable.student_icon)
-                        .error(R.drawable.ic_launcher_foreground)
-                        .into(binding.StudentPic)
-                }
+        // Initialize checkbox state
+        binding.checkBox.isChecked = student?.isChecked ?: false
+
+        //load image to the row
+        student?.avatarUrl?.let { avatarUrl ->
+            Log.d("TAG", "Loading image for student: ${student.name}, avatarUrl: $avatarUrl")
+            if (avatarUrl.isNotBlank()) {
+                Glide.with(binding.root.context)
+                    .load(avatarUrl)
+                    .placeholder(R.drawable.student_icon)
+                    .circleCrop()
+                    .into(binding.StudentPic)
+            } else {
+                binding.StudentPic.setImageResource(R.drawable.student_icon)
             }
         }
+
     }
-
-
 }
+
+

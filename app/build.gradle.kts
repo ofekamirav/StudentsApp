@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+
+
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
@@ -61,7 +65,10 @@ dependencies {
     implementation(libs.firebase.storage)
 
     implementation(libs.cloudinary.android)
-    implementation(libs.picasso)
+
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+
 
     implementation(libs.room.runtime)
     kapt(libs.androidx.room.compiler)

@@ -7,6 +7,7 @@ import com.cloudinary.android.callback.UploadCallback
 import com.cloudinary.android.policy.GlobalUploadPolicy
 import com.example.studentsapp.BuildConfig
 import com.example.studentsapp.base.MyApplication
+import com.example.studentsapp.base.StringCallback
 import com.example.studentsapp.utils.extensions.toFile
 import java.io.File
 
@@ -29,8 +30,8 @@ class CloudinaryModel {
     fun uploadImage(
         bitmap: Bitmap,
         name: String,
-        onSuccess: (String?) -> Unit,
-        onError: (String?) -> Unit
+        onSuccess: StringCallback,
+        onError: StringCallback
     ) {
         val context = MyApplication.Globals.context ?: return
         val file: File = bitmap.toFile(context, name)

@@ -75,9 +75,32 @@ class Model private constructor() {
         firebaseModel.getStudentById(id, callback)
 
     }
-
     fun updateStudent(student: Student, callback: EmptyCallback) {
         firebaseModel.updateStudent(student, callback)
+    }
+
+    fun updateStudentwithImage(student: Student,image: Bitmap?, callback: EmptyCallback) {
+        if (image != null) {
+            // Upload the image to Cloudinary
+            uploadImageToCloudinary(
+                image = image,
+                name = student.id,
+                onSuccess = { uri ->
+                    // Update the student with the new image URL
+                    val updatedStudent = uri?.let { student.copy(avatarUrl = it) }
+                    if (updatedStudent != null) {
+                        firebaseModel.updateStudent(updatedStudent, callback)
+                    }
+                },
+                onError = {
+                    // If upload failed, still update student without new image
+                    firebaseModel.updateStudent(student, callback)
+                }
+            )
+        } else {
+            // Only update the student without uploading an image
+            firebaseModel.updateStudent(student, callback)
+        }
 
     }
     private fun uploadImageToFirebase(image: Bitmap, name: String, callback: StringCallback ) {

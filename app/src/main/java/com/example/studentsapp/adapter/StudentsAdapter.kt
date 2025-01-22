@@ -16,8 +16,14 @@ class StudentsAdapter(
     var listener: OnStudentClickListener? = null
 ) :  RecyclerView.Adapter<StudentViewHolder>(){
 
+    private var checkboxListener: OnStudentCheckboxChangeListener? = null
+
     fun set(students: List<Student>?){
         this.students = students
+    }
+
+    fun setOnStudentCheckboxChangeListener(listener: OnStudentCheckboxChangeListener) {
+        this.checkboxListener = listener
     }
 
     //אתחול של שורה ברשימה שלנו
@@ -25,7 +31,7 @@ class StudentsAdapter(
             val inflater = LayoutInflater.from(parent.context)
             val binding = StudentListRowBinding.inflate(inflater, parent, false)
 
-            return StudentViewHolder(binding, listener)
+            return StudentViewHolder(binding, listener, checkboxListener)
         }
         //כמה פריטים יופיעו ברשימה
         override fun getItemCount(): Int {
