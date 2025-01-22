@@ -2,7 +2,6 @@ package com.example.studentsapp.base
 
 import android.app.Application
 import android.content.Context
-import com.squareup.picasso.Picasso
 
 
 //סט מכל מקום באפליקציה ככה ניתן לגשת לקונטק
@@ -16,6 +15,5 @@ class MyApplication: Application() {
         Globals.context = applicationContext
 
 
-        Picasso.setSingletonInstance(Picasso.Builder(this).build())
     }
 }

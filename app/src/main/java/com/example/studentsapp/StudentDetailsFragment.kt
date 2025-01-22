@@ -15,12 +15,14 @@ import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import com.bumptech.glide.Glide
 import com.example.studentsapp.databinding.StudentDetailsBinding
 import com.example.studentsapp.model.Model
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.squareup.picasso.Picasso
 
 class StudentDetailsFragment : Fragment() {
+    
+    private var binding: StudentDetailsBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,6 @@ class StudentDetailsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private var binding: StudentDetailsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,11 +69,13 @@ class StudentDetailsFragment : Fragment() {
 
                     // Loading student image with Picasso
                     if (student.avatarUrl.isNotEmpty()) {
-                        Picasso.get()
-                            .load(student.avatarUrl) // כתובת התמונה
-                            .placeholder(R.drawable.student_icon) // תמונה שתוצג בזמן הטעינה
-                            .error(R.drawable.ic_launcher_foreground) // תמונה שתוצג אם יש שגיאה
-                            .into(binding?.StudentPic)
+                        binding?.StudentPic?.let {
+                            Glide.with(this)
+                                .load(student.avatarUrl)
+                                .placeholder(R.drawable.student_icon)
+                                .circleCrop()
+                                .into(it)
+                        }
                     }
 
                 }
@@ -85,7 +88,7 @@ class StudentDetailsFragment : Fragment() {
                     if (studentList.isNotEmpty()) {
                         val student = studentList[0]
                         Model.shared.deleteStudent(student) {
-                            Log.d("StudentDetailsFragment", "Student deleted successfully!")
+                            Log.d("TAG", "StudentDetailsFragment: Student deleted successfully!")
                         }
                         AlertDialog.Builder(requireContext())
                             .setTitle("Deleted")
